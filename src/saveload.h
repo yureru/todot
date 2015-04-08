@@ -10,5 +10,6 @@
 */
 
 int load_data(struct node *list, struct data *sd);
-
+int save_data(struct data *sd, FILE *db);
+int flush_line(FILE *db);
 #endif // SAVELOAD_H
