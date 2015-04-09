@@ -5,6 +5,7 @@
 
 #include "saveload.h"
 #include "list.h"
+#include "readin.h"
 
 const char *DB_FILE = "./src/db.txt";
 
@@ -20,7 +21,7 @@ int load_data(struct node *list, struct data *sd)
 	FILE *db = NULL;
 	db = fopen(DB_FILE, "r");
 	if (db != NULL)
-		save_data(&savedata, db);
+		save_data(sd, db);//save_data(&savedata, db);
 	else
 		puts("Couldn't open file");
 	
@@ -31,45 +32,20 @@ int load_data(struct node *list, struct data *sd)
 // refactor function, this is wider than hidamari's faces
 int save_data(struct data *sd, FILE *db)
 {
-	static size_t cmpsz = strlen(typeNote[0]); // All three strings are strlen 9
-	static char subbuff[cmpsz + 1];
+	size_t cmpsz = strlen(typeNote[0]); // All three strings are strlen 9
+	char subbuff[cmpsz + 1];
 	signed char c;
-	int count = 1;
+	size_t count = 0;
 	int wastask = 0;
 	while ((c = fgetc(db)) != EOF) {
-		subbuf[count] = c;
+		subbuff[count++] = c;
 		if (count == cmpsz) {
-			subbuf[cmpsz] = '\0';
-			for (int i = 0; typeNote[i] != NULL; ++i) {
-				if (strcmp(subbuf, typeNote[i]) == 0) {
-					// lastnode was task and had date string
-					if (wastask && i == 1) {
-						sd->tail->str; // save str date
-						wastask = 0;
-					}
-					
-					// line has task
-					if (i == 0) {
-						insert_item(list, sd, 1, str);
-						wastask = 1;
-					}
-					if (i == 2) {
-						insert_item(list, sd, 2, str);
-						wastask = 0;
-					}
-					
-					// start reading from this allocating mem until new-line
-					// create node based on i (i == 0 -> create task,
-					// i == 1 -> check if after i was 0, add date on last node. i == 2, create note.
-				} else {
-					// read until '\n'
-					if (!flush_line(db)) {
-						// exit loop and function, we reached end of file
-						
-					}
-				}
-			}
-			count = 1;
+			subbuff[cmpsz] = '\0';
+			char *str = gets_unl_f(db);
+			for (int i = 0; typeNote[i] != NULL; ++i)
+				if (strcmp(subbuff, typeNote[i]) == 0)
+					new_item(i, &wastask, sd, str);
+			count = 0;
 		}
 	}
 	return 0; // edit
@@ -83,4 +59,24 @@ int flush_line(FILE *db)
 	if (i == EOF)
 		return 0;
 	return 1;
+}
+
+void new_item(int taskornote, int *wastask, struct data *sd, char *str)
+{
+	// lastnode was task and had date string
+	if (*wastask && taskornote == 1) {
+		sd->tail->date = str; // save str date
+		*wastask = 0;
+	} else if (taskornote == 1){
+		free(str); // Date was found after a note, discard it
+		*wastask = 0;
+	}
+	if (taskornote == 0) {
+		insert_item(list, sd, 1, str);
+		*wastask = 1;
+	}
+	if (taskornote == 2) {
+		insert_item(list, sd, 2, str);
+		*wastask = 0;
+	}
 }
