@@ -71,3 +71,29 @@ size_t is_null(char *ptr)
 	else
 		return 0;
 }
+
+char *gets_unl_f(FILE *db)
+{
+	const size_t morelength = 20;
+	char *buffer = malloc(morelength);
+	char *currentpos = buffer;
+	int currentchar;
+	size_t maxlength = morelength;
+	size_t length = 0;
+	if (is_null(currentpos))
+		return NULL;
+	while (((currentchar = fgetc(db)) != '\n') && currentchar != EOF) {
+		if (++length >= maxlength) {
+			char *newBuffer = realloc(buffer, maxlength += morelength);
+			if (is_null(newBuffer)) {
+				free(buffer);
+				return NULL;
+			}
+			currentpos = newBuffer + (currentpos - buffer);
+			buffer = newBuffer;
+		}
+		*currentpos++ = currentchar;
+	}
+	*currentpos = '\0';
+	return buffer;
+}
