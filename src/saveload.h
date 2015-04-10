@@ -12,7 +12,8 @@
 */
 
 int load_data(struct node *list, struct data *sd);
-int save_data(struct data *sd, FILE *db);
-int flush_line(FILE *db);
+int load_list_f(struct data *sd, FILE *db);
+int flush_line_f(FILE *db);
 void new_item(int taskornote, int *wastask, struct data *sd, char *str);
+void save_data_f(struct data *sd, const char **tn);
 #endif // SAVELOAD_H
