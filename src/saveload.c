@@ -20,17 +20,20 @@ int load_data(struct node *list, struct data *sd)
 	// load file
 	FILE *db = NULL;
 	db = fopen(DB_FILE, "r");
-	if (db != NULL)
-		save_data(sd, db);//save_data(&savedata, db);
-	else
-		puts("Couldn't open file");
+	if (db != NULL) {
+		load_list_f(sd, db);//save_data(&savedata, db);
+		fclose(db);
+	} else {
+		puts("Couldn't open file, make sure db.txt exists on /src/ folder");
+		exit(EXIT_FAILURE);
+	}
 	
 	return 0;
 }
 
 
 // refactor function, this is wider than hidamari's faces
-int save_data(struct data *sd, FILE *db)
+int load_list_f(struct data *sd, FILE *db)
 {
 	size_t cmpsz = strlen(typeNote[0]); // All three strings are strlen 9
 	char subbuff[cmpsz + 1];
@@ -51,7 +54,7 @@ int save_data(struct data *sd, FILE *db)
 	return 0; // edit
 }
 
-int flush_line(FILE *db)
+int flush_line_f(FILE *db)
 {
 	int i;
 	while ((i = fgetc(db)) != '\n' && i != EOF)
@@ -79,4 +82,15 @@ void new_item(int taskornote, int *wastask, struct data *sd, char *str)
 		insert_item(list, sd, 2, str);
 		*wastask = 0;
 	}
+}
+
+void save_data_f(struct data *sd, const char **tn)
+{
+	FILE *db = NULL;
+	db = fopen(DB_FILE, "r+");
+	if (db == NULL) {
+		puts("Couldn't save data to file, make sure db.txt exists on /src/ folder");
+		exit(EXIT_FAILURE);
+	}
+	apply_f(sd, db, tn);
 }
