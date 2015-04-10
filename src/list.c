@@ -172,6 +172,15 @@ const char *print_task_note_windex(const struct node *curr, size_t id)
 	return msg;
 }
 
+/*const char *print_task_for_today(const struct node *curr, size_t id)
+{
+	static const char *msg = "There's no tasks with today's date";
+	if (id != 0 && curr->date != NULL)
+		if (istoday(curr->date))
+			printf("Task: %s\n", curr->str);
+	return msg;
+}*/
+
 void print_task_for_today(const struct data *savedata)
 {
 	struct node *curr = savedata->head;
@@ -349,6 +358,21 @@ int item_exists(size_t id, const struct node **curr, const struct node **prev)
 	if (*curr != NULL && i == id)
 		return 1;
 	return 0;
+}
+
+void apply_f(const struct data *savedata, FILE *db, const char **tn)
+{
+	for (struct node *curr = savedata->head;
+		curr != NULL;
+		curr = curr->next) {
+		if (curr->ton == 1) {
+			fprintf(db, "%s%s\n", tn[0], curr->str);
+			if (curr->date != NULL)
+				fprintf(db, "%s%s\n", tn[1], curr->date);
+		}
+		if (curr->ton == 2)
+			fprintf(db, "%s%s\n", tn[2], curr->str);
+	}
 }
 
 /* Visualization of linked list
