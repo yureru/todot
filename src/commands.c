@@ -27,9 +27,11 @@ const char *months[] = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug",
 			"sep", "oct", "nov", "dec"};
 const unsigned monthqt = 12; // Number of months, should be obvious
 
+// Extern variables
 extern struct node *list;
 extern struct data savedata;
-		
+extern const char *DB_FILE;
+extern const char *typeNote[];
 int get_command(void)
 {
 	static int init = 1;
@@ -53,6 +55,7 @@ int get_command(void)
 	/* Used for testing */
 	if (buf[0] == 'q') {
 		//get_date();
+		save_data_f(&savedata, typeNote);
 		print_data(&savedata);
 		delete_list(&savedata);
 		return 0;
