@@ -70,5 +70,6 @@ const char *print_task_note_windex(const struct node *curr, size_t id);
 void delete_item(struct data *savedata, size_t id, int taskornote);
 struct node *del_itm(struct node *item, int taskornote);
 int item_exists(size_t id, const struct node **curr, const struct node **prev);
+void apply_f(const struct data *savedata, FILE *db, const char **tn);
 
 #endif
