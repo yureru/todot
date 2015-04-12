@@ -14,9 +14,9 @@ const char *typeNote[] = {"[task] = ", "[date] = ", "[note] = ", NULL};
 struct node *list;
 struct data savedata;
 
-int load_data(struct node *list, struct data *sd)
+int load_data(struct data *sd)
 {
-	initdata(list, sd);
+	initdata(sd);
 	// load file
 	FILE *db = NULL;
 	db = fopen(DB_FILE, "r");
@@ -27,7 +27,6 @@ int load_data(struct node *list, struct data *sd)
 		puts("Couldn't open file, make sure db.txt exists on /src/ folder");
 		exit(EXIT_FAILURE);
 	}
-	
 	return 0;
 }
 
@@ -44,11 +43,16 @@ int load_list_f(struct data *sd, FILE *db)
 		subbuff[count++] = c;
 		if (count == cmpsz) {
 			subbuff[cmpsz] = '\0';
+			int delstr = 1;
 			char *str = gets_unl_f(db);
 			for (int i = 0; typeNote[i] != NULL; ++i)
-				if (strcmp(subbuff, typeNote[i]) == 0)
+				if (strcmp(subbuff, typeNote[i]) == 0) {
 					new_item(i, &wastask, sd, str);
+					delstr = 0;
+				}
 			count = 0;
+			if (delstr)
+				free(str);
 		}
 	}
 	return 0; // edit
@@ -75,11 +79,11 @@ void new_item(int taskornote, int *wastask, struct data *sd, char *str)
 		*wastask = 0;
 	}
 	if (taskornote == 0) {
-		insert_item(list, sd, 1, str);
+		insert_item(sd, 1, str);
 		*wastask = 1;
 	}
 	if (taskornote == 2) {
-		insert_item(list, sd, 2, str);
+		insert_item(sd, 2, str);
 		*wastask = 0;
 	}
 }
@@ -87,7 +91,7 @@ void new_item(int taskornote, int *wastask, struct data *sd, char *str)
 void save_data_f(struct data *sd, const char **tn)
 {
 	FILE *db = NULL;
-	db = fopen(DB_FILE, "r+");
+	db = fopen(DB_FILE, "w");
 	if (db == NULL) {
 		puts("Couldn't save data to file, make sure db.txt exists on /src/ folder");
 		exit(EXIT_FAILURE);
