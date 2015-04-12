@@ -31,5 +31,5 @@ Little todo application.
 ---
 
 - C99 compliance
-- Warning free (not yet)
+- Warning free
 - Did this while listening to [ZUN](http://en.wikipedia.org/wiki/Team_Shanghai_Alice)
