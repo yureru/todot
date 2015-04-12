@@ -5,8 +5,7 @@
 
 #include "readin.h"
 
-
-char *gets_unl(int tsknte) // tsknte unused, delete it
+char *gets_unl(void)
 {
 	char *str = readstdin();
 #ifdef DEBUG
@@ -42,15 +41,9 @@ char *readstdin(void)
 	return buffer;
 }
 
-char *delmem(char *str)
-{
-	free(str);
-	return NULL;
-}
-
 int want_date(void)
 {
-	char *str = gets_unl(0);
+	char *str = gets_unl();
 	size_t sz = strlen(str);
 	if (sz == 1) {
 		if (*str == 'y' || *str == 'Y') {
