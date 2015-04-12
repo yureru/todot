@@ -32,41 +32,34 @@ extern struct node *list;
 extern struct data savedata;
 extern const char *DB_FILE;
 extern const char *typeNote[];
+
 int get_command(void)
 {
 	static int init = 1;
 	if (init) { // Execute only once
-		load_data(list, &savedata);
+		load_data(&savedata);
 		get_date();
 		init = 0;
 	}
 		
 	static char buf[BUF_SIZE];
-	//printf("Enter cmd: ");
 	ask_input(0);
 	fgets(buf, BUF_SIZE, stdin);
 	validate_cmd(buf);
 	int indexcmd = 0;
 	if ((indexcmd = search_cmd(buf))) {
-		operation(indexcmd, list, &savedata);
+		operation(indexcmd, &savedata);
 	} else {
 		puts("Unknown command, enter ? or help");
 	}
 	/* Used for testing */
 	if (buf[0] == 'q') {
-		//get_date();
 		save_data_f(&savedata, typeNote);
 		print_data(&savedata);
 		delete_list(&savedata);
 		return 0;
 	}
-		
-	/*
-	if (date_is_valid(buf))
-		printf("%s, is a valid date\n", buf);
-	else
-		printf("%s, is not a valid date\n", buf);
-	return 1;*/
+
 	return 1;
 }
 
@@ -88,28 +81,21 @@ int search_cmd(const char * restrict str)
 }
 
 
-void operation(int op, struct node *item, struct data *savedata) // CHANGE NAME savedata, HIDES GLOBAL
+void operation(int op, struct data *savedata)
 {
-	/*op -= 1; // scale to index*/
-	/*if (op > -1 && op < 11)
-		printf("%s", options[op]);
-	else*/
 	int id;
 	switch (op) {
-		case 1:
-			// Add note
+		case 1: // Add note
 			ask_input(op);
-			//printf("%s", options[op]);
-			insert_item(item, savedata, 2, gets_unl(op));
+			insert_item(savedata, 2, gets_unl());
 		break;
-		case 2:
-			// Add task
+		case 2: // Add task
 			ask_input(op);
-			insert_item(item, savedata, 1, gets_unl(op));
+			insert_item(savedata, 1, gets_unl());
 			ask_input(5); // Want add date?
 			if (want_date()) {
 				ask_input(6);
-				char *date = gets_unl(op);
+				char *date = gets_unl();
 				if (date_is_valid(date)) {
 					savedata->tail->date = date;
 				} else {
@@ -117,8 +103,7 @@ void operation(int op, struct node *item, struct data *savedata) // CHANGE NAME 
 				}
 			}
 		break;
-		case 3:
-			// Delete note
+		case 3: // Delete note
 			ask_input(op);
 			id = id2delete();
 			if (id == -1) {
@@ -127,8 +112,7 @@ void operation(int op, struct node *item, struct data *savedata) // CHANGE NAME 
 			}
 			delete_item(savedata, id, 2);
 		break;
-		case 4:
-			// Delete task
+		case 4: // Delete task
 			ask_input(op);
 			id = id2delete();
 			if (id == -1) {
@@ -137,32 +121,22 @@ void operation(int op, struct node *item, struct data *savedata) // CHANGE NAME 
 			}
 			delete_item(savedata, id, 1);
 		break;
-		case 5:
-		case 6:
-		/* FALL THROUGH */
-			// Help
+		case 5: /* FALL THROUGH */
+		case 6: // Help
 		break;
-		case 7:
-			// Print all
-			//print_task_note_windex(savedata);
+		case 7: // Print all
 			apply(savedata, print_task_note_windex, 3);
 		break;
-		case 8:
-			// Print notes
-			//print_note_windex(savedata);
+		case 8: // Print notes
 			apply(savedata, print_note_windex, 2);
 		break;
-		case 9:
-			// Print tasks
-			//print_task_windex(savedata);
+		case 9: // Print tasks
 			apply(savedata, print_note_windex, 1);
 		break;
-		case 10:
-			// Todo
+		case 10: // Todo
 			print_task_for_today(savedata);
 		break;
-		case 11:
-			// Quit
+		case 11: // Quit
 		break;
 		default:
 		break;
@@ -175,15 +149,9 @@ void ask_input(unsigned op)
 	printf("%s", options[op]);
 }
 
-// Ask item to delete, if not valid enter returns -1, otherwise the id from 1 to int_max
-/*
- * Ask for number of 7 digits max, that is valid:
- * Valid means: It's not negative, it's not zero, it doesn't start with 0 (e.g: 019), it doesn't contains
- * alphabetic characters (e.g: 12e32).
-*/
 int id2delete(void)
 {
-	char *num = gets_unl(0);
+	char *num = gets_unl();
 	size_t sz = strlen(num);
 	// Guards
 	if (sz < 1 || sz > 7)
