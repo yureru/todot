@@ -20,7 +20,6 @@ int correct_length_date(char *str)
 {
 	validate_cmd(str);
 	size_t sz = strlen(str);
-	//printf("LENGH os str is %u\n", sz);
 	if (sz < 5 || sz > 6)
 		return 0;
 	return 1;
@@ -37,7 +36,6 @@ int in_alphabet(const char * restrict str, size_t until)
 	return 0;
 }
 
-// jan 10
 int are_digit(const char * restrict str, size_t adv, size_t quantity)
 {
 	for (size_t i = 0; i < adv && str != '\0'; ++i, ++str)
@@ -46,10 +44,9 @@ int are_digit(const char * restrict str, size_t adv, size_t quantity)
 #ifdef DEBUG
 	printf("str is: '%s'\n", str);
 #endif
-	for (size_t i = 0; str[i] != '\0' && i < quantity/* && str[i] != '\n' */; ++i, ++cnt)
+	for (size_t i = 0; str[i] != '\0' && i < quantity; ++i, ++cnt)
 		if (!isdigit(str[i]))
 			break;
-	//if (cnt == quantity)
 	if (cnt)
 		return 1;
 	return 0;
@@ -65,19 +62,6 @@ int is_month(const char * restrict str, size_t sz)
 
 int date_is_valid(char *str)
 {
-	//int mth = is_month(str, 3);
-	//return in_alphabet(str, 3) && are_digit(str, 4, 2) && is_month(str, 3);
-	// valid: may 10. not valid: kek 10, may 40, jun -1, etc.
-	/*int arr[5];
-	arr[0] = correct_length_date(str);
-	arr[1] = in_alphabet(str, 3);
-	arr[2] = are_digit(str, 4, 2);
-	arr[3] = is_month(str, 3);
-	arr[4] = day_in_range(str);*/
-/*#ifdef DEBUG
-	printf("state %d %d %d %d %d\n", arr[0], arr[1], arr[2], arr[3], arr[4]);
-#endif*/
-	//return arr[0] && arr[1] && arr[2] && arr[3] && fur_val(str) && arr[4];
 	// New approach, functions needs to be called only if the before one was returned true
 	return correct_length_date(str) && in_alphabet(str, 3) && are_digit(str, 4, 2) &&
 		is_month(str, 3) && day_in_range(str);
@@ -85,11 +69,6 @@ int date_is_valid(char *str)
 
 int fur_val(const char * restrict str)
 {
-	/*static int val[3];
-	if (*(str + 3)  == ' ')
-		val[0] = 1;
-	else
-		val[0] = 0;*/
 	if (str[3] != ' ')
 		return 0;
 	if (str[4] == '0')
@@ -98,7 +77,7 @@ int fur_val(const char * restrict str)
 		return 0;
 	return 1;
 }
-// dec 10
+
 int day_in_range(char *str/*, size_t number*/)
 {
 	// error at power * 10, day 11 is 59
