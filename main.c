@@ -4,14 +4,10 @@
 #include "src/commands.h"
 #include "src/saveload.h"
 #include "src/list.h"
-
-/*struct data savedata;*/
+#include "src/readin.h"
 
 int main(void)
 {
-	
-	/*load_data(&savedata);
-	run();*/
 	while (1) {
 		if (!get_command())
 			break;
