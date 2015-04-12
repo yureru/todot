@@ -28,11 +28,10 @@ int search_cmd(const char * restrict str);
 
 /* operation
  * Description: Selects which command perform.
- * Parameters: Opcode.
+ * Parameters: Opcode, pointer to struct data.
  * Returns: Nothing.
  **/
-//void operation(int op);
-void operation(int op, struct node *item, struct data *savedata);
+void operation(int op, struct data *savedata);
 
 // Ask input based on option
 void ask_input(unsigned op);
