@@ -83,5 +83,10 @@ void get_date(void);
  */
 void pdate(const char *date);
 
+/* istoday
+ * Description: Compares today's date and the string given.
+ * Parameters: Pointer to date string.
+ * Returns: True if compare was success, false otherwise.
+ **/
 int istoday(const char *date);
 #endif // -> DATE_H
