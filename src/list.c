@@ -108,21 +108,24 @@ void apply(const struct data *savedata,
 const char *print_note_windex(const struct node *curr, size_t id)
 {
 	static const char *msg = "There's no notes currently";
-	printf("[id %d] %s\n", id, curr->str);
+	if (id != 0)
+		printf("[id %d] %s\n", id, curr->str);
 	return msg;
 }
 
 const char *print_task_windex(const struct node *curr, size_t id)
 {
 	static const char *msg = "There's no tasks currently";
-	printf("[id %d] %s\n", id, curr->str);
+	if (id != 0)
+		printf("[id %d] %s\n", id, curr->str);
 	return msg;
 }
 
 const char *print_task_note_windex(const struct node *curr, size_t id)
 {
 	static const char *msg = "There's no tasks or notes currently";
-	printf("[id %d] %s\n", id, curr->str);
+	if (id != 0)
+		printf("[id %d] %s\n", id, curr->str);
 	return msg;
 }
 
